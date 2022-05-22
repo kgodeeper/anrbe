@@ -10,7 +10,7 @@ const user_login = (user)=>{
                if(error) rj(error);
                else{
                     if(result.length>0) rs(result[0]);
-                    else rs({username:null,password:null,token:null,fullname:null});
+                    else rs({username:"",password:"",token:"",fullname:""});
                }
           })
      })

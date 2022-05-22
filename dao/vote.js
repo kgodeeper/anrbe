@@ -1,5 +1,20 @@
 const con = require('./db');
 
+const strformat = (d)=>{
+     d.setTime(d.getTime() + (7*60*60*1000));
+     return(
+          [
+          d.getFullYear(),  
+          d.getMonth()+1,
+          d.getDate(),
+          ].join('-')+' '+
+          [d.getHours(),
+          d.getMinutes(),
+          d.getSeconds()].join(':')
+          + '.' + d.getMilliseconds()
+     )
+}
+
 const get_vote_info = (id)=>{
      return new Promise((rs,rj)=>{
           sql = `SELECT * FROM tbl_vote WHERE creation = ${id}`;
@@ -90,15 +105,15 @@ const add_vote = (creation,account,vote,comment)=>{
                }else{
                     if(result.length > 0){
                          sql = `UPDATE tbl_vote SET vote='${vote}',vote_comment='${comment}',
-                         update_at = CURRENT_TIMESTAMP
+                         update_at = '${strformat(new Date())}'
                          WHERE creation = ${creation} AND account='${account}'`;
                          con.query(sql,(error)=>{
                               console.log({error});
                               error ? rj(error) : rs();
                          })
                     }else{
-                         sql = `INSERT INTO tbl_vote(creation,account,vote,vote_comment) 
-                         VALUES('${creation}','${account}','${vote}','${comment}')`;
+                         sql = `INSERT INTO tbl_vote(creation,account,vote,vote_comment,update_at) 
+                         VALUES('${creation}','${account}','${vote}','${comment}','${strformat(new Date())}')`;
                          con.query(sql,(error)=>{
                               console.log({error});
                               error ? rj(error) : rs();
@@ -111,7 +126,8 @@ const add_vote = (creation,account,vote,comment)=>{
 
 const get_all_vote = (id)=>{
      return new Promise((rs,rj)=>{
-          sql = `SELECT creation,account,vote,vote_comment,update_at FROM tbl_vote WHERE creation=${id}`;
+          sql = `SELECT creation,account,vote,vote_comment,update_at FROM tbl_vote WHERE creation=${id}
+          ORDER BY date(update_at) DESC`;
           con.query(sql,(error,result)=>{
                if(error) rj(error);
                else{

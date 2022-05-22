@@ -40,7 +40,7 @@ const add_vote = (req,res)=>{
      creation = req.body.creation;
      account  = req.body.account;
      vote     = req.body.vote;
-     comment  = req.body.comment;
+     comment  = req.body.vote_comment;
      voteDAO.add_vote(creation,account,vote,comment)
      .then(()=>{
           res.status(200).json({
