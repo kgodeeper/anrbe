@@ -11,6 +11,6 @@ app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended:true}));
 app.use(router);
 
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT || 1711,()=>{
      console.log(`Server is running on port: ${process.env.PORT}`);
 });
